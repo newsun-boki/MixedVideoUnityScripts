@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class LockTransform : MonoBehaviour
 {
-    private Vector3 initialPosition;   // ³õÊ¼Î»ÖÃ
-    private Quaternion initialRotation; // ³õÊ¼Ðý×ª
-    private Vector3 initialScale;     // ³õÊ¼Ëõ·Å
+    private Vector3 initialPosition;   // ï¿½ï¿½Ê¼Î»ï¿½ï¿½
+    private Quaternion initialRotation; // ï¿½ï¿½Ê¼ï¿½ï¿½×ª
+    private Vector3 initialScale;     // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 
-    void Start()
+    void OnEnable()
     {
-        // ¼ÇÂ¼ÎïÌåµÄ³õÊ¼ Transform ÊôÐÔ
+        // ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ä³ï¿½Ê¼ Transform ï¿½ï¿½ï¿½ï¿½
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         initialScale = transform.localScale;
@@ -16,7 +16,7 @@ public class LockTransform : MonoBehaviour
 
     void Update()
     {
-        // Ëø¶¨ÎïÌåµÄ Transform ÊôÐÔ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Transform ï¿½ï¿½ï¿½ï¿½
         transform.position = initialPosition;
         transform.rotation = initialRotation;
         transform.localScale = initialScale;

@@ -9,7 +9,7 @@ public class UIEnableManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     private void OnEnable()
@@ -20,16 +20,35 @@ public class UIEnableManager : MonoBehaviour
     // Update is called once per frame
     public void SwitchActive()
     {
-        this.gameObject.SetActive(!gameObject.activeSelf);
+        bool newState = !gameObject.activeSelf;
+        this.gameObject.SetActive(newState);
+
+        // 当UI被禁用时，启用选择功能
+        if (!newState)
+        {
+            AssetManager.Instance.EnableSelection();
+        }
+        else
+        {
+            AssetManager.Instance.DisableSelection();
+        }
     }
 
     public void SwitchPanels(string UIPanelName)
     {
-        for(int i = 0; i < UIPanels.Count; i++)
+        for (int i = 0; i < UIPanels.Count; i++)
         {
             if (UIPanels[i].name == UIPanelName)
             {
                 UIPanels[i].SetActive(true);
+                if (UIPanelName == "AssetsUI")
+                {
+                    AssetManager.Instance.DisableSelection();
+                }
+                else
+                {
+                    AssetManager.Instance.EnableSelection();
+                }
             }
             else
             {

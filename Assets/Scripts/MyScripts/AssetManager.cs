@@ -4,6 +4,7 @@ using UnityEngine;
 public class AssetManager : MonoBehaviour
 {
     public static AssetManager Instance { get; private set; }
+    public Transform AssetParent;
 
     // List to store all the assets in the scene
     private List<GameObject> assets = new List<GameObject>();
@@ -23,12 +24,13 @@ public class AssetManager : MonoBehaviour
     }
 
     // Add a new asset to the scene
-    public void AddAsset(GameObject assetPrefab, Vector3 position, Quaternion rotation)
+    public void AddAsset(GameObject newAsset)
     {
-        if (assetPrefab != null)
+        if (newAsset != null)
         {
-            GameObject newAsset = Instantiate(assetPrefab, position, rotation);
+            newAsset.transform.SetParent(AssetParent);
             assets.Add(newAsset);
+
             Debug.Log($"Asset added: {newAsset.name}");
         }
         else
@@ -71,6 +73,7 @@ public class AssetManager : MonoBehaviour
             {
                 objectHighlight.HighlightingOn();
             }
+            InspectorManager.Instance.UpdateInspector();
             Debug.Log($"Asset selected: {currentSelectedAsset.name}");
         }
         else
@@ -97,5 +100,29 @@ public class AssetManager : MonoBehaviour
     public GameObject GetCurrentSelectedAsset()
     {
         return currentSelectedAsset;
+    }
+
+    public void DisableSelection()
+    {
+        foreach (var asset in assets)
+        {
+            Transform grabInteractor = asset.transform.Find("DistanceHandGrabRelative");
+            if (grabInteractor != null)
+            {
+                grabInteractor.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void EnableSelection()
+    {
+        foreach (var asset in assets)
+        {
+            Transform grabInteractor = asset.transform.Find("DistanceHandGrabRelative");
+            if (grabInteractor != null)
+            {
+                grabInteractor.gameObject.SetActive(true);
+            }
+        }
     }
 }

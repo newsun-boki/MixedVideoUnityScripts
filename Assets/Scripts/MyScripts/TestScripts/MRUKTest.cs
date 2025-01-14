@@ -5,6 +5,7 @@ using System.IO;
 using Meta.XR.MRUtilityKit;
 using Meta.XR.Util;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
@@ -13,11 +14,13 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 public class MRUKTest : MonoBehaviour
 {
+    public static MRUKTest Instance { get; private set; }
     private OVRCameraRig _cameraRig;
     public GameObject _debugCube;
     void Awake()
     {
         _cameraRig = FindObjectOfType<OVRCameraRig>();
+        Instance = this;
     }
 
     private Ray GetControllerRay()
@@ -54,14 +57,45 @@ public class MRUKTest : MonoBehaviour
         return new Ray(rayOrigin, rayDirection);
     }
     // Start is called before the first frame update
-    
+    public Vector3 GetBestPosition()
+    {
+        var ray = GetControllerRay();
+        MRUKAnchor sceneAnchor = null;
+        var positioningMethod = MRUK.PositioningMethod.DEFAULT;
+        var bestPose = MRUK.Instance?.GetCurrentRoom()?.GetBestPoseFromRaycast(ray, Mathf.Infinity,
+            new LabelFilter(), out sceneAnchor, positioningMethod);
+        if (bestPose.HasValue && sceneAnchor)
+        {
+            return bestPose.Value.position;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    public Quaternion GetBestRotation()
+    {
+        var ray = GetControllerRay();
+        MRUKAnchor sceneAnchor = null;
+        var positioningMethod = MRUK.PositioningMethod.DEFAULT;
+        var bestPose = MRUK.Instance?.GetCurrentRoom()?.GetBestPoseFromRaycast(ray, Mathf.Infinity,
+            new LabelFilter(), out sceneAnchor, positioningMethod);
+        if (bestPose.HasValue && sceneAnchor)
+        {
+            return bestPose.Value.rotation;
+        }
+        else
+        {
+            return Quaternion.identity;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
         var ray = GetControllerRay();
         MRUKAnchor sceneAnchor = null;
         var positioningMethod = MRUK.PositioningMethod.DEFAULT;
-
         var bestPose = MRUK.Instance?.GetCurrentRoom()?.GetBestPoseFromRaycast(ray, Mathf.Infinity,
             new LabelFilter(), out sceneAnchor, positioningMethod);
         if (bestPose.HasValue && sceneAnchor && _debugCube)
@@ -69,7 +103,7 @@ public class MRUKTest : MonoBehaviour
             _debugCube.transform.position = bestPose.Value.position;
             _debugCube.transform.rotation = bestPose.Value.rotation;
             _debugCube.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-           
+
         }
     }
 }

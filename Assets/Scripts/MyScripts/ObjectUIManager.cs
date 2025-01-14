@@ -7,7 +7,6 @@ public class ObjectUIManager : MonoBehaviour
 {
     public GameObject objectToDuplicate;
     private Transform objectParent;
-    private Transform newParent;
 
     public bool isActivated = false;
     // ���ƺ���
@@ -20,9 +19,9 @@ public class ObjectUIManager : MonoBehaviour
             GameObject duplicatedObject = Instantiate(objectToDuplicate, objectParent);
 
             duplicatedObject.transform.position = objectToDuplicate.transform.position;
-            newParent = GameObject.Find("Creations").transform;
-            objectToDuplicate.transform.SetParent(newParent);
-            AllObjectsManager.Instance.AddObject(objectToDuplicate);
+            // newParent = GameObject.Find("Creations").transform;
+            // objectToDuplicate.transform.SetParent(newParent);
+            AssetManager.Instance.AddAsset(objectToDuplicate);
             Debug.Log($"Duplicated object: {duplicatedObject.name}");
         }
         else
